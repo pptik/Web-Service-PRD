@@ -64,20 +64,33 @@ class CUsers extends Controller
     /** POST register */
     public function register(Request $request)
     {
-        $peran = $request['peran'];
-        $email = $request['email'];
-        $nim = $request['nim'];
-        $universitas = $request['universitas'];
-        $username = $request['username'];
+        $peran = $request['peran'];//
+        $email = $request['email'];//
+        $universitas = $request['universitas'];//
+        $username = $request['username'];//
         $password = bcrypt($request['password']);
+        $password_ulang = bcrypt($request['password_ulang']);
 
-        $array = array(
-            'message' => 'Mohon isi semua field yang diminta.',
-        );
+        //Bila Ada field yang kosong
+        if ($peran == '' || $email == '' || $universitas == '' || $username == '' || $password == '' || $password_ulang == '') {//Bila ada field yang kosong
+            $array = array(
+                'message' => 'Mohon isi semua field yang diminta.',
+            );
 
-        if ($peran == '' || $email == '' || $nim == '' || $universitas == '' || $username == '' || $password == '') {//Bila ada field yang kosong
-            return (['status' => 'success', 'data' => $array, 'RC' => '01']);
+            return (['status' => 'success', 'data' => $array, 'RC' => '01', 'message' => 'mohon isi semua isian yang diminta']);
         }
+
+        //Bila sandi dengan tulis ulang tidak sama
+
+        if($request['password'] != $request['password_ulang']){
+            $array = array(
+                'message' => 'Tulis ulang sandi anda tidak sama',
+            );
+
+            return (['status' => 'success', 'data' => $array, 'RC' => '01', 'message' => 'tulis ulang sandi anda tidak sama']);
+        }
+
+
 
         //Bila email atau username sudah terdaftar
         $akunTerdaftar = DB::table('users')
@@ -90,14 +103,13 @@ class CUsers extends Controller
                 'message' => 'Maaf username atau email sudah terdafar.',
             );
 
-            return (['status' => 'success', 'data' => $array, 'RC' => '01']);
+            return (['status' => 'success', 'data' => $array, 'RC' => '01', 'message' => 'maaf username atau email sudah terdafar']);
         }
 
         //Masukan ke tabel user
         $user = new MUsers();
         $user->peran = $peran;
         $user->email = $email;
-        $user->nim = $nim;
         $user->universitas = $universitas;
         $user->username = $username;
         $user->password = bcrypt($request['password']);
@@ -106,8 +118,7 @@ class CUsers extends Controller
 
         //Masukan ke tabel peran
         switch ($peran) {
-            case 2:
-                //Masukan ke tabel dosen
+            case 2://Dosen
                 $id_users = DB::table("users")
                     ->where('email', '=', $email)
                     ->get();
@@ -127,9 +138,8 @@ class CUsers extends Controller
                     ->where('email', '=', $email)
                     ->get();
 
-                return (['status' => 'success', 'data' => $user, 'RC' => '00']);break;
-            case 4:
-                //Masukan ke tabel mahasiswa
+                return (['status' => 'success', 'data' => $user, 'RC' => '00', 'message' => 'Anda telah mendaftar sebagai Dosen']);break;
+            case 4://Mahasiswa
                 $id_users = DB::table("users")
                     ->where('email', '=', $email)
                     ->get();
@@ -150,7 +160,7 @@ class CUsers extends Controller
                     ->where('email', '=', $email)
                     ->get();
 
-                return (['status' => 'success', 'data' => $user, 'RC' => '00']);break;
+                return (['status' => 'success', 'data' => $user, 'RC' => '00', 'message' => 'Anda telah mendaftar sebagai Mahasiswa']);break;
         }
 
     }

@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use DB;
+
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use DB;
 
-class CTopik extends Controller
+class CUniversities extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,12 +21,12 @@ class CTopik extends Controller
     }
 
     public function daftar(){
-
-        $topik = DB::table('topik')
-            ->select('id','nama_topik','thumbnail')
+        $universitas = DB::table('universitas')
+            ->select('universitas.id','nama_depan','nama_belakang')
+            ->join('users','users.id','=','universitas.id_users')
             ->get();
 
-        return (['status' => 'success', 'data' => $topik, 'RC' => '00' , 'message' => 'Berhasil mengembalikan daftar topik']);
+        return (['status' => 'success', 'data' => $universitas, 'RC' => '00' , 'message' => 'Berhasil mengembalikan daftar universitas']);
     }
     /**
      * Show the form for creating a new resource.

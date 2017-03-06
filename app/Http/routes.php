@@ -20,5 +20,7 @@ Route::get('/a', function () {
 });
 
 Route::get('/topik', 'CTopik@daftar');
+Route::get('/universities', 'CUniversities@daftar');
+Route::get('/registrationroles', 'CRoles@registrationroles');
 Route::post('/login', 'CUsers@login');
 Route::post('/register', 'CUsers@register');

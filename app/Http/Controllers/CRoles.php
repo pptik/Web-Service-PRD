@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 
-class CTopik extends Controller
+class CRoles extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,14 +20,15 @@ class CTopik extends Controller
         //
     }
 
-    public function daftar(){
-
-        $topik = DB::table('topik')
-            ->select('id','nama_topik','thumbnail')
+    public function registrationroles(){
+        $peran = DB::table('peran')
+            ->where('peran.id','=','2')
+            ->orWhere('peran.id','=','4')
             ->get();
 
-        return (['status' => 'success', 'data' => $topik, 'RC' => '00' , 'message' => 'Berhasil mengembalikan daftar topik']);
+        return (['status' => 'success', 'data' => $peran, 'RC' => '00' , 'message' => 'Berhasil mengembalikan daftar peran untuk pendaftaran']);
     }
+
     /**
      * Show the form for creating a new resource.
      *
