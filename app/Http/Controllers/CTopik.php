@@ -19,6 +19,45 @@ class CTopik extends Controller
         //
     }
 
+    public function topik_dashboard()
+    {
+        //
+        //ambil data topik
+        $topik = DB::table('topik')
+            //->join('sub_topik','sub_topik.id_topik','=','topik.id')
+            ->orderBy('topik.id', 'asc')
+            ->get();
+
+
+        return (['status' => 'success', 'data' => $topik, 'RC' => '00' , 'message' => 'Berhasil mengembalikan topik dashboard']);
+
+    }
+
+    public function jumlah_sub_topik_dashboard(Request $request)
+    {
+        //
+        //ambil data topik
+        $sub_topik = DB::table('sub_topik')
+            ->where('id_topik','=',$request['id'])
+            ->count();
+
+
+        return (['status' => 'success', 'data' => $sub_topik, 'RC' => '00' , 'message' => 'Berhasil mengembalikan topik dashboard']);
+
+    }
+
+    public function topik_yang_sudah_dikerjakan(Request $request){
+
+        $topik_sudah_dikerjakan = DB::table('mahasiswa_mengambil_topik')
+            ->select('nama_topik')
+            ->join('topik', 'topik.id', '=', 'mahasiswa_mengambil_topik.id_topik')
+            ->where('id_pengguna', '=', $request["id"])
+            ->distinct()
+            ->get();
+
+        return (['status' => 'success', 'data' => $topik_sudah_dikerjakan, 'RC' => '00' , 'message' => 'Berhasil mengembalikan topik yang sudah dikerjakan']);
+    }
+
     public function daftar(){
 
         $topik = DB::table('topik')

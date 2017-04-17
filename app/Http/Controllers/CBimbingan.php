@@ -3,12 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use DB;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use DB;
 
-class CUniversities extends Controller
+class CBimbingan extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -20,25 +19,19 @@ class CUniversities extends Controller
         //
     }
 
-    public function nama_universitas(Request $request){
-        $universitas = DB::table('users')
-            ->select('users.nama_depan','users.nama_belakang')
-            ->join('universitas','universitas.id_users','=','users.id')
-            ->where('universitas.id','=',$request["id"])
+    public function ambil_judul(Request $request){
+        $judul_bimbingan = DB::table('bimbingan')
+            ->select('bimbingan.judul','topik.nama_topik','bimbingan.created_at')
+            ->join('mahasiswa','mahasiswa.id','=', 'bimbingan.mahasiswa')
+            ->join('users','users.id','=', 'mahasiswa.id_users')
+            ->join('topik','topik.id','=', 'bimbingan.topik')
+            ->where('users.id','=',$request["id"])
+            ->orderBy('bimbingan.created_at','desc')
             ->get();
 
-        return (['status' => 'success', 'data' => $universitas, 'RC' => '00' , 'message' => 'Berhasil mengembalikan nama universitas atau institusi']);
+        return (['status' => 'success', 'data' => $judul_bimbingan, 'RC' => '00' , 'message' => 'Berhasil mengembalikan judul bimbingan']);
     }
 
-    public function daftar(){
-        $universitas = DB::table('universitas')
-            ->select('universitas.id','nama_depan','nama_belakang')
-            ->join('users','users.id','=','universitas.id_users')
-            ->orderBy('nama_depan','asc')
-            ->get();
-
-        return (['status' => 'success', 'data' => $universitas, 'RC' => '00' , 'message' => 'Berhasil mengembalikan daftar universitas']);
-    }
     /**
      * Show the form for creating a new resource.
      *

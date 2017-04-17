@@ -133,6 +133,7 @@ class CUsers extends Controller
                 $dosen->id_users = $id_users_val;
                 $dosen->save();
                 //Data user
+                //Data preferences: email, idUsers, universitas, peran, username
                 $user = DB::table('users')
                     ->select('*')
                     ->where('email', '=', $email)
@@ -162,6 +163,23 @@ class CUsers extends Controller
 
                 return (['status' => 'success', 'data' => $user, 'RC' => '00', 'message' => 'Anda telah mendaftar sebagai Mahasiswa']);break;
         }
+
+    }
+
+    public function ubah_profile(Request $request){
+        //return $request['nama_depan'].$request['nama_belakang'].$request['nim'];
+        $update = DB::table('users')
+            ->where('id', $request["id"])
+            ->update(['nama_depan' => $request['nama_depan'], 'nama_belakang' => $request['nama_belakang']
+                , 'nim' => $request['nim']]);
+
+        if ($update) {
+            return (['status' => 'success', 'data' => $update, 'RC' => '00', 'message' => 'Berhasil mengubah profil']);
+        }
+
+    }
+
+    public function ambil_profile(Request $request){
 
     }
 
